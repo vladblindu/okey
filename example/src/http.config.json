@@ -1,0 +1,16 @@
+{
+  "baseUrl": "http://localhost:3003",
+    "endpoints":{
+  "login": {
+    "url": "/login",
+      "method": "POST",
+      "headers": {"ContentType":  "application/json"}
+
+  },
+  "register":{
+    "url": "/register",
+      "method": "POST",
+      "headers": {"ContentType":  "application/json"}
+  }
+}
+}

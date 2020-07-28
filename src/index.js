@@ -14,12 +14,6 @@ import { isEmpty } from './helpers'
  * @param {object?} user - if a na authenticated call has been made - see above
  */
 
-export const IS_AUTH = 1
-export const LOGIN = 2
-export const LOGOUT = 3
-export const REGISTER = 4
-export const USER = 5
-
 export const AuthContext = React.createContext({})
 
 export const AuthProvider = ({ config, children }) => {
@@ -32,6 +26,7 @@ export const AuthProvider = ({ config, children }) => {
     registerEndpoint,
     httpAgent
   } = config
+
   const [user, setUser] = React.useState({})
 
   const clearLocalStorage = () => {
@@ -40,9 +35,10 @@ export const AuthProvider = ({ config, children }) => {
   }
 
   const setToken = (jwt) => localStorage.setItem(tokenKey, jwt)
-  const setAuthData = (jwt, _user) => {
-    setToken(jwt)
-    setUser({ ...user, ..._user })
+  const setAuthData = (payload) => {
+    setToken(payload.jwt)
+    setUser({ ...user, ...payload.user })
+    localStorage.setItem(userKey, JSON.stringify(payload.user))
   }
 
   const login = async (identifier, password) => {
@@ -50,11 +46,13 @@ export const AuthProvider = ({ config, children }) => {
       identifier,
       password
     })
+    console.log(authData)
     if (!authData.error) setAuthData(authData)
     return authData
   }
 
   const register = async (registerData) => {
+    console.log(config)
     const regData = await httpAgent(registerEndpoint, registerData)
     if (regData.error) return regData
     if (!regData.error && registerEnabled && regData.jwt && regData.user)
@@ -65,7 +63,7 @@ export const AuthProvider = ({ config, children }) => {
   const logout = () => {
     setUser({})
     clearLocalStorage()
-    loginRedirect()
+    if (loginRedirect) loginRedirect()
   }
 
   const context = {
@@ -73,17 +71,15 @@ export const AuthProvider = ({ config, children }) => {
     logout,
     register,
     user,
-    isAuthenticated: () => isEmpty(user)
+    isAuthenticated: !isEmpty(user)
   }
 
   return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = (type) => {
-  const authContext = React.useContext(AuthContext)
-  if (type === IS_AUTH) return authContext.isAuthenticated()
-  if (type === LOGIN) return authContext.login
-  if (type === LOGOUT) return authContext.logout
-  if (type === REGISTER) return authContext.register
-  if (type === USER) return authContext.user
-}
+export const useAuth = () => React.useContext(AuthContext)
+export const useLogin = () => React.useContext(AuthContext).login
+export const useLogout = () => React.useContext(AuthContext).logout
+export const useRegister = () => React.useContext(AuthContext).register
+export const useIsAuth = () => React.useContext(AuthContext).isAuthenticated
+export const useUser = () => React.useContext(AuthContext).user

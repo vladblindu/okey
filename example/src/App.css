@@ -1,0 +1,38 @@
+.ball{
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.red{
+  background-color: red;
+}
+
+.green{
+  background-color: green;
+}
+
+button {
+  background-color: blueviolet;
+  padding: 5px 10px 5px 10px;
+  color: white;
+  border: none;
+  margin-right: 15px;
+}
+
+.buttons-container {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 20px;
+  border: 1px solid grey;
+}
+
+.current-user {
+  padding: 20px;
+  font-size: larger;
+}
+
+.current-user > span{
+  font-weight: bold;
+  color: blueviolet;
+}

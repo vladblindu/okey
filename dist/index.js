@@ -27,11 +27,6 @@ var isEmpty = function isEmpty(o) {
   return !Object.keys(o).length;
 };
 
-var IS_AUTH = 1;
-var LOGIN = 2;
-var LOGOUT = 3;
-var REGISTER = 4;
-var USER = 5;
 var AuthContext = React.createContext({});
 var AuthProvider = function AuthProvider(_ref) {
   var config = _ref.config,
@@ -59,9 +54,10 @@ var AuthProvider = function AuthProvider(_ref) {
     return localStorage.setItem(tokenKey, jwt);
   };
 
-  var setAuthData = function setAuthData(jwt, _user) {
-    setToken(jwt);
-    setUser(_extends({}, user, _user));
+  var setAuthData = function setAuthData(payload) {
+    setToken(payload.jwt);
+    setUser(_extends({}, user, payload.user));
+    localStorage.setItem(userKey, JSON.stringify(payload.user));
   };
 
   var login = function login(identifier, password) {
@@ -70,6 +66,7 @@ var AuthProvider = function AuthProvider(_ref) {
         identifier: identifier,
         password: password
       })).then(function (authData) {
+        console.log(authData);
         if (!authData.error) setAuthData(authData);
         return authData;
       });
@@ -80,6 +77,7 @@ var AuthProvider = function AuthProvider(_ref) {
 
   var register = function register(registerData) {
     try {
+      console.log(config);
       return Promise.resolve(httpAgent(registerEndpoint, registerData)).then(function (regData) {
         if (regData.error) return regData;
         if (!regData.error && registerEnabled && regData.jwt && regData.user) setAuthData(regData);
@@ -93,7 +91,7 @@ var AuthProvider = function AuthProvider(_ref) {
   var logout = function logout() {
     setUser({});
     clearLocalStorage();
-    loginRedirect();
+    if (loginRedirect) loginRedirect();
   };
 
   var context = {
@@ -101,29 +99,37 @@ var AuthProvider = function AuthProvider(_ref) {
     logout: logout,
     register: register,
     user: user,
-    isAuthenticated: function isAuthenticated() {
-      return isEmpty(user);
-    }
+    isAuthenticated: !isEmpty(user)
   };
   return /*#__PURE__*/React.createElement(AuthContext.Provider, {
     value: context
   }, children);
 };
-var useAuth = function useAuth(type) {
-  var authContext = React.useContext(AuthContext);
-  if (type === IS_AUTH) return authContext.isAuthenticated();
-  if (type === LOGIN) return authContext.login;
-  if (type === LOGOUT) return authContext.logout;
-  if (type === REGISTER) return authContext.register;
-  if (type === USER) return authContext.user;
+var useAuth = function useAuth() {
+  return React.useContext(AuthContext);
+};
+var useLogin = function useLogin() {
+  return React.useContext(AuthContext).login;
+};
+var useLogout = function useLogout() {
+  return React.useContext(AuthContext).logout;
+};
+var useRegister = function useRegister() {
+  return React.useContext(AuthContext).register;
+};
+var useIsAuth = function useIsAuth() {
+  return React.useContext(AuthContext).isAuthenticated;
+};
+var useUser = function useUser() {
+  return React.useContext(AuthContext).user;
 };
 
 exports.AuthContext = AuthContext;
 exports.AuthProvider = AuthProvider;
-exports.IS_AUTH = IS_AUTH;
-exports.LOGIN = LOGIN;
-exports.LOGOUT = LOGOUT;
-exports.REGISTER = REGISTER;
-exports.USER = USER;
 exports.useAuth = useAuth;
+exports.useIsAuth = useIsAuth;
+exports.useLogin = useLogin;
+exports.useLogout = useLogout;
+exports.useRegister = useRegister;
+exports.useUser = useUser;
 //# sourceMappingURL=index.js.map

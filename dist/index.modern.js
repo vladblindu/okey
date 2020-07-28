@@ -1,120 +1,82 @@
 import React from 'react';
 
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
 
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
+const isEmpty = o => !Object.keys(o).length;
 
-    return target;
-  };
+const AuthContext = React.createContext({});
+const AuthProvider = ({
+  config,
+  children
+}) => {
+  const {
+    tokenKey = TOKEN_KEY,
+    userKey = USER_KEY,
+    loginRedirect,
+    loginEndpoint,
+    registerEnabled,
+    registerEndpoint,
+    httpAgent
+  } = config;
+  const [user, setUser] = React.useState({});
 
-  return _extends.apply(this, arguments);
-}
-
-var TOKEN_KEY = 'token';
-var USER_KEY = 'user';
-
-var isEmpty = function isEmpty(o) {
-  return !Object.keys(o).length;
-};
-
-var IS_AUTH = 1;
-var LOGIN = 2;
-var LOGOUT = 3;
-var REGISTER = 4;
-var USER = 5;
-var AuthContext = React.createContext({});
-var AuthProvider = function AuthProvider(_ref) {
-  var config = _ref.config,
-      children = _ref.children;
-  var _config$tokenKey = config.tokenKey,
-      tokenKey = _config$tokenKey === void 0 ? TOKEN_KEY : _config$tokenKey,
-      _config$userKey = config.userKey,
-      userKey = _config$userKey === void 0 ? USER_KEY : _config$userKey,
-      loginRedirect = config.loginRedirect,
-      loginEndpoint = config.loginEndpoint,
-      registerEnabled = config.registerEnabled,
-      registerEndpoint = config.registerEndpoint,
-      httpAgent = config.httpAgent;
-
-  var _React$useState = React.useState({}),
-      user = _React$useState[0],
-      setUser = _React$useState[1];
-
-  var clearLocalStorage = function clearLocalStorage() {
+  const clearLocalStorage = () => {
     localStorage.removeItem(tokenKey);
     localStorage.removeItem(userKey);
   };
 
-  var setToken = function setToken(jwt) {
-    return localStorage.setItem(tokenKey, jwt);
+  const setToken = jwt => localStorage.setItem(tokenKey, jwt);
+
+  const setAuthData = payload => {
+    setToken(payload.jwt);
+    setUser({ ...user,
+      ...payload.user
+    });
+    localStorage.setItem(userKey, JSON.stringify(payload.user));
   };
 
-  var setAuthData = function setAuthData(jwt, _user) {
-    setToken(jwt);
-    setUser(_extends({}, user, _user));
+  const login = async (identifier, password) => {
+    const authData = await httpAgent(loginEndpoint, {
+      identifier,
+      password
+    });
+    console.log(authData);
+    if (!authData.error) setAuthData(authData);
+    return authData;
   };
 
-  var login = function login(identifier, password) {
-    try {
-      return Promise.resolve(httpAgent(loginEndpoint, {
-        identifier: identifier,
-        password: password
-      })).then(function (authData) {
-        if (!authData.error) setAuthData(authData);
-        return authData;
-      });
-    } catch (e) {
-      return Promise.reject(e);
-    }
+  const register = async registerData => {
+    console.log(config);
+    const regData = await httpAgent(registerEndpoint, registerData);
+    if (regData.error) return regData;
+    if (!regData.error && registerEnabled && regData.jwt && regData.user) setAuthData(regData);
+    return regData;
   };
 
-  var register = function register(registerData) {
-    try {
-      return Promise.resolve(httpAgent(registerEndpoint, registerData)).then(function (regData) {
-        if (regData.error) return regData;
-        if (!regData.error && registerEnabled && regData.jwt && regData.user) setAuthData(regData);
-        return regData;
-      });
-    } catch (e) {
-      return Promise.reject(e);
-    }
-  };
-
-  var logout = function logout() {
+  const logout = () => {
     setUser({});
     clearLocalStorage();
-    loginRedirect();
+    if (loginRedirect) loginRedirect();
   };
 
-  var context = {
-    login: login,
-    logout: logout,
-    register: register,
-    user: user,
-    isAuthenticated: function isAuthenticated() {
-      return isEmpty(user);
-    }
+  const context = {
+    login,
+    logout,
+    register,
+    user,
+    isAuthenticated: !isEmpty(user)
   };
   return /*#__PURE__*/React.createElement(AuthContext.Provider, {
     value: context
   }, children);
 };
-var useAuth = function useAuth(type) {
-  var authContext = React.useContext(AuthContext);
-  if (type === IS_AUTH) return authContext.isAuthenticated();
-  if (type === LOGIN) return authContext.login;
-  if (type === LOGOUT) return authContext.logout;
-  if (type === REGISTER) return authContext.register;
-  if (type === USER) return authContext.user;
-};
+const useAuth = () => React.useContext(AuthContext);
+const useLogin = () => React.useContext(AuthContext).login;
+const useLogout = () => React.useContext(AuthContext).logout;
+const useRegister = () => React.useContext(AuthContext).register;
+const useIsAuth = () => React.useContext(AuthContext).isAuthenticated;
+const useUser = () => React.useContext(AuthContext).user;
 
-export { AuthContext, AuthProvider, IS_AUTH, LOGIN, LOGOUT, REGISTER, USER, useAuth };
+export { AuthContext, AuthProvider, useAuth, useIsAuth, useLogin, useLogout, useRegister, useUser };
 //# sourceMappingURL=index.modern.js.map
