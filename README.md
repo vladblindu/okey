@@ -1,30 +1,26 @@
-# @vladblindu/okey
+![okey logo](./_art/logo@0.5x.png)
 
-> React app auth
+# @bitbrother/okey
 
-[![NPM](https://img.shields.io/npm/v/@vladblindu/okey.svg)](https://www.npmjs.com/package/@vladblindu/okey) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+### React app auth
+
+
+[![NPM](https://img.shields.io/npm/v/@vladblindu/okey.svg)](https://www.npmjs.com/package/@vladblindu/okey)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
 
 ```bash
 npm install --save @vladblindu/okey
+
+#or
+
+yarn add @bitbrother/okey
 ```
 
 ## Usage
 
-```jsx
-import React, { Component } from 'react'
-
-import MyComponent from '@vladblindu/okey'
-import '@vladblindu/okey/dist/index.css'
-
-class Example extends Component {
-  render() {
-    return <MyComponent />
-  }
-}
-```
-
+### TODO Decent docs
 ## License
 
 MIT © [vladblindu](https://github.com/vladblindu)
