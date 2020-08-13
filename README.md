@@ -22,5 +22,11 @@ yarn add @bitbrother/okey
 
 ### TODO Decent docs
 ## License
+### Changelog:
+1.0.1 - Config contains httpAgent
+1.1.0 - Added peer dependency @bitbrother/fetch-dog-hooks
+        No more httpAgent in config
 
 MIT © [vladblindu](https://github.com/vladblindu)
+
+

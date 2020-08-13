@@ -1,19 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {AuthProvider} from '@vladblindu/okey'
-import httpAgent from './http-agent'
+import { AuthProvider } from '@vladblindu/okey'
+import httpConfig from './http.config.json'
 import App from './App'
+import { HttpProvider } from '@bitbrother/fetch-dog-hooks'
 
 const authCfg = {
   loginEndpoint: 'login',
-  registerEndpoint:'register',
-  httpAgent: httpAgent,
+  registerEndpoint: 'register',
   registerEnabled: true
 }
 
+httpConfig.redirect = pth => {
+  alert('REDIRECTED TO: ' + pth)
+}
+
 ReactDOM.render(
-  <AuthProvider config={authCfg}>
-    <App />
-  </AuthProvider>,
+  <HttpProvider config={httpConfig}>
+    <AuthProvider config={authCfg}>
+      <App/>
+    </AuthProvider>
+  </HttpProvider>,
   document.getElementById('root')
 )

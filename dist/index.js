@@ -1,6 +1,7 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var React = _interopDefault(require('react'));
+var fetchDogHooks = require('@bitbrother/fetch-dog-hooks');
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -38,12 +39,13 @@ var AuthProvider = function AuthProvider(_ref) {
       loginRedirect = config.loginRedirect,
       loginEndpoint = config.loginEndpoint,
       registerEnabled = config.registerEnabled,
-      registerEndpoint = config.registerEndpoint,
-      httpAgent = config.httpAgent;
+      registerEndpoint = config.registerEndpoint;
 
   var _React$useState = React.useState({}),
       user = _React$useState[0],
       setUser = _React$useState[1];
+
+  var httpAgent = fetchDogHooks.useHttp(fetchDogHooks.HTTP);
 
   var clearLocalStorage = function clearLocalStorage() {
     localStorage.removeItem(tokenKey);
@@ -66,7 +68,6 @@ var AuthProvider = function AuthProvider(_ref) {
         identifier: identifier,
         password: password
       })).then(function (authData) {
-        console.log(authData);
         if (!authData.error) setAuthData(authData);
         return authData;
       });
@@ -77,7 +78,6 @@ var AuthProvider = function AuthProvider(_ref) {
 
   var register = function register(registerData) {
     try {
-      console.log(config);
       return Promise.resolve(httpAgent(registerEndpoint, registerData)).then(function (regData) {
         if (regData.error) return regData;
         if (!regData.error && registerEnabled && regData.jwt && regData.user) setAuthData(regData);

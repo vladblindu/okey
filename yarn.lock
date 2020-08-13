@@ -1140,10 +1140,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bitbrother/fetch-dog@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@bitbrother/fetch-dog/-/fetch-dog-1.0.2.tgz#d59c0c5b16d2df72d349d0a563428f80c64771da"
-  integrity sha512-SLM+CxHK8quhHXDG67I6cZkG6T+K1Ya9e2l791k/c5bncdjD83qs97MYTo+/x3R1lmaag4bz6QcEMzXisCtDAw==
+"@bitbrother/fetch-dog-hooks@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@bitbrother/fetch-dog-hooks/-/fetch-dog-hooks-1.0.0.tgz#2b5ea3f0f0ee371bb22b76e4d9c2945cd6057fd2"
+  integrity sha512-u1onZscca/9HUCJtgbb8oV116L/v6W8zqxPj1rqPG5xkqYFA+4dHZd68yVPh2w9bOdqIv1xJx+UTsGb9lFsaMg==
   dependencies:
     url-join "^4.0.1"
 

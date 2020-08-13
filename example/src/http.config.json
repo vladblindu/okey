@@ -1,16 +1,24 @@
 {
   "baseUrl": "http://localhost:3003",
-    "endpoints":{
-  "login": {
-    "url": "/login",
+  "endpoints": {
+    "login": {
+      "url": "/login",
       "method": "POST",
-      "headers": {"ContentType":  "application/json"}
-
-  },
-  "register":{
-    "url": "/register",
+      "headers": {
+        "ContentType": "application/json"
+      }
+    },
+    "register": {
+      "url": "/register",
       "method": "POST",
-      "headers": {"ContentType":  "application/json"}
+      "headers": {
+        "ContentType": "application/json"
+      }
+    },
+    "errorPages": {
+      "404": "/404",
+      "500": "/500",
+      "403": "/403"
+    }
   }
-}
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { HTTP, useHttp } from '@bitbrother/fetch-dog-hooks'
 import { TOKEN_KEY, USER_KEY } from './constants'
 import { isEmpty } from './helpers'
 
@@ -23,11 +24,11 @@ export const AuthProvider = ({ config, children }) => {
     loginRedirect,
     loginEndpoint,
     registerEnabled,
-    registerEndpoint,
-    httpAgent
+    registerEndpoint
   } = config
 
   const [user, setUser] = React.useState({})
+  const httpAgent = useHttp(HTTP)
 
   const clearLocalStorage = () => {
     localStorage.removeItem(tokenKey)
@@ -46,13 +47,11 @@ export const AuthProvider = ({ config, children }) => {
       identifier,
       password
     })
-    console.log(authData)
     if (!authData.error) setAuthData(authData)
     return authData
   }
 
   const register = async (registerData) => {
-    console.log(config)
     const regData = await httpAgent(registerEndpoint, registerData)
     if (regData.error) return regData
     if (!regData.error && registerEnabled && regData.jwt && regData.user)
