@@ -76,9 +76,13 @@ export const AuthProvider = ({ config, children }) => {
   return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => React.useContext(AuthContext)
-export const useLogin = () => React.useContext(AuthContext).login
-export const useLogout = () => React.useContext(AuthContext).logout
-export const useRegister = () => React.useContext(AuthContext).register
-export const useIsAuth = () => React.useContext(AuthContext).isAuthenticated
-export const useUser = () => React.useContext(AuthContext).user
+export const useAuth = () => {
+  const context = React.useContext(AuthContext)
+  if (!context || isEmpty(context))
+    throw new Error('DEVERR: No available Auth context in useAuth hook.')
+}
+export const useLogin = () => useAuth().login
+export const useLogout = () => useAuth().logout
+export const useRegister = () => useAuth().register
+export const useIsAuth = () => useAuth().isAuthenticated
+export const useUser = () => useAuth().user

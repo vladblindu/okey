@@ -106,22 +106,23 @@ var AuthProvider = function AuthProvider(_ref) {
   }, children);
 };
 var useAuth = function useAuth() {
-  return React.useContext(AuthContext);
+  var context = React.useContext(AuthContext);
+  if (!context || isEmpty(context)) throw new Error('DEVERR: No available Auth context in useAuth hook.');
 };
 var useLogin = function useLogin() {
-  return React.useContext(AuthContext).login;
+  return useAuth().login;
 };
 var useLogout = function useLogout() {
-  return React.useContext(AuthContext).logout;
+  return useAuth().logout;
 };
 var useRegister = function useRegister() {
-  return React.useContext(AuthContext).register;
+  return useAuth().register;
 };
 var useIsAuth = function useIsAuth() {
-  return React.useContext(AuthContext).isAuthenticated;
+  return useAuth().isAuthenticated;
 };
 var useUser = function useUser() {
-  return React.useContext(AuthContext).user;
+  return useAuth().user;
 };
 
 exports.AuthContext = AuthContext;
