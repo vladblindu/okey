@@ -23,9 +23,9 @@ yarn add @bitbrother/okey
 ### TODO Decent docs
 ## License
 ### Changelog:
-1.0.1 - Config contains httpAgent
-1.1.0 - Added peer dependency @bitbrother/fetch-dog-hooks
-        No more httpAgent in config
+1.0.1 - Added peer dependency @bitbrother/fetch-dog-hooks
+        No more httpAgent in config. Http uses http hook
+1.0.2 - Added DEVERR rejection if no auth context is available 
 
 MIT © [vladblindu](https://github.com/vladblindu)
 
